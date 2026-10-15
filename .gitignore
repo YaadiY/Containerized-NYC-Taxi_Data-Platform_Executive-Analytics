@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.venv-windows/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data files (do not commit large datasets to Git)
+*.parquet
+*.csv
+*.gz
+*.tar
+*.zip
+data/
+
+# Docker volumes
+pg_data/
+

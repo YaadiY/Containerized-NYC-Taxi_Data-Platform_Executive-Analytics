@@ -1,0 +1,32 @@
+services:
+
+  pgdatabase:
+    image: postgres:16
+    container_name: pgdatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    networks:
+      - pg-network
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ny_taxi
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "8080:80"
+    networks:
+      - pg-network
+    depends_on:
+      - pgdatabase
+
+networks:
+  pg-network:
+    driver: bridge

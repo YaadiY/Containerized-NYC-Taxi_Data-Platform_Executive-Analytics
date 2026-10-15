@@ -1,0 +1,28 @@
+[project]
+name = "postgres-docker"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Addi", email = "adityayelegaon1@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=3.0.6",
+    "pyarrow>=25.0.1",
+    "sqlalchemy>=2.1.3",
+]
+
+[project.scripts]
+postgres-docker = "postgres_docker:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+    "pgcli==4.3.0",
+    "psycopg[binary]>=3.3.6",
+]
