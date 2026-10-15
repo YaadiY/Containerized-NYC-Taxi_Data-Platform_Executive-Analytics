@@ -56,7 +56,7 @@ postgres_docker/
 ├── pyproject.toml           # Project dependencies managed via uv
 ├── README.md                # Project architecture and execution documentation
 ├── docker-compose.yaml      # Multi-container orchestration (Postgres 16 + pgAdmin 4)
-├── ingest_data.py           # Parameterized CLI data ingestion pipeline [Next]
+├── ingest.py                # Parameterized chunked CLI ingestion engine (Parquet + CSV)
 └── Dockerfile               # Container definition for the ingestion pipeline [Upcoming]
 ```
 
@@ -91,6 +91,16 @@ To stop services:
 docker compose down
 ```
 
+### 4. Run Chunked Data Ingestion
+Stream dataset files directly into PostgreSQL using the CLI engine:
+```bash
+# Ingest Taxi Zone Lookup (CSV)
+uv run python ingest.py --table_name zones --url taxi_zone_lookup.csv
+
+# Ingest Yellow Taxi Trips (Parquet, ~3.72M records)
+uv run python ingest.py --table_name yellow_taxi_trips --url yellow_tripdata_2026-01.parquet
+```
+
 ---
 
 ## Roadmap & Progress Tracker
@@ -98,6 +108,7 @@ docker compose down
 - [x] Repository initialization & Git configuration
 - [x] Git ignore rules for large dataset files (`.parquet`, `.csv`)
 - [x] Docker Compose setup for PostgreSQL 16 & pgAdmin 4
-- [ ] Chunked data ingestion script (`ingest_data.py`)
-- [ ] Dockerizing the ingestion pipeline
+- [x] Chunked data ingestion script (`ingest.py`)
+- [ ] Multi-month full dataset ingestion & automation
+- [ ] Dockerizing the ingestion pipeline (`Dockerfile`)
 - [ ] Analytical SQL queries & homework validation
