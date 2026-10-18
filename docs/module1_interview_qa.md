@@ -177,6 +177,18 @@ pgadmin:
 
 ---
 
+### Q11: Why do Data Engineers transition from Jupyter Notebooks to parameterized Python scripts and Docker containers in production?
+* **Junior vs. Senior Comparison:**
+  * **Junior Answer:** *"Jupyter is for data science and analysts, while Python scripts are for developers."*
+  * **Senior / Production Answer:**
+    > *"Jupyter Notebooks are outstanding for interactive Exploratory Data Analysis (EDA), inspecting Parquet schemas, and prototyping SQL queries. However, they are fundamentally unsuited for production pipelines for four engineering reasons:*  
+    > 1. **Zero Orchestrator Compatibility:** Workflow schedulers (Airflow, Kestra, Dagster, Cron) execute unattended on headless Linux servers without browsers or humans. They execute CLI commands (e.g., `python ingest.py --host pgdatabase --url ...`) or Docker containers.
+    > 2. **Hidden State & Out-of-Order Execution:** Notebooks preserve interactive kernel state. Variables can be executed out of order, creating subtle, unreproducible bugs that fail in production.
+    > 3. **Memory Leaks on Large Datasets:** Jupyter keeps cell execution outputs and historical DataFrame variables in kernel memory. In multi-million-row batch pipelines, this causes rapid Out-Of-Memory (OOM) crashes.
+    > 4. **Containerization & CI/CD Parity:** A parameterized Python script can be packaged into an immutable 50MB Docker container with strict dependencies, tested via CI/CD, and executed across dev, staging, and prod with identical behavior."*
+
+---
+
 ## Part 4: Real-World Scenario Interview Questions
 
 ### Scenario 1: "Your batch container dies with Exit Code 137 in production. What is your troubleshooting checklist?"

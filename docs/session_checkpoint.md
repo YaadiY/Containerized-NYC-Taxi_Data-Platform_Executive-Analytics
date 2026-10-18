@@ -1,7 +1,28 @@
 # Session Checkpoint: Module 1 DE Zoomcamp
 
+## Latest Checkpoint — October 19, 2026
+
+The current working Power BI report is [`Dashboard.pbix`](../Dashboard.pbix) in the repository root. The January 2025 Gold daily-demand view has been built and reconciled to the Silver table: 3,475,080 trips across 463,623 groups. Gold analysis queries are saved in [`sql/analyze_gold_yellow_taxi_2025_01.sql`](../sql/analyze_gold_yellow_taxi_2025_01.sql), and dashboard setup guidance is in [`dashboard_first_chart.md`](dashboard_first_chart.md).
+
+### Resume Here
+
+1. Start PostgreSQL with `docker compose up -d` if the containers were stopped, then open `Dashboard.pbix`.
+2. Finish the visual field assignments:
+   - Daily trend: use the `pickup_date` column (not **Date hierarchy > Day**) on X; `total_trips` on Y.
+   - Manhattan zone ranking: `total_trips` as the only bar value; `pct_of_manhattan_pickups` in Tooltips.
+   - Weekday/borough chart: `average_daily_trips` as the value; `days_in_january` in Tooltips; use the borough slicer to inspect smaller boroughs.
+   - Quality trend: `pct_trips_with_review_flags` as the only Y value; trip counts in Tooltips.
+   - Remove the unused blank visual. The two KPI cards should show about 3.48M monthly trips and 112.10K average daily trips.
+3. Save the report and review the final layout. Query 8's result table has not yet been shared for a separate daily quality-pattern interpretation.
+
+The next optional dashboard extension is a chart of the daily review-flag percentage. The measure counts each trip once if any provisional review condition applies; it is a review signal, not a count of confirmed invalid trips.
+
+---
+
 **Date:** October 16, 2026  
 **Status:** Milestone 3 & 4 Completed Successfully
+
+> **Follow-up:** This checkpoint captures the October 16 session. The later data-quality work and the current database table state are recorded in [`data_quality_workflow.md`](data_quality_workflow.md).
 
 ---
 
