@@ -1,21 +1,24 @@
 # Session Checkpoint: Module 1 DE Zoomcamp
 
-## Latest Checkpoint — October 19, 2026
+## Latest Checkpoint — October 22, 2026
 
-The current working Power BI report is [`Dashboard.pbix`](../Dashboard.pbix) in the repository root. The January 2025 Gold daily-demand view has been built and reconciled to the Silver table: 3,475,080 trips across 463,623 groups. Gold analysis queries are saved in [`sql/analyze_gold_yellow_taxi_2025_01.sql`](../sql/analyze_gold_yellow_taxi_2025_01.sql), and dashboard setup guidance is in [`dashboard_first_chart.md`](dashboard_first_chart.md).
+The first end-to-end NYC Yellow Taxi analytics project is complete enough to move on after a small Power BI axis adjustment. The current report is [`Final Dashboard NYC Taxi Data.pbix`](../Final%20Dashboard%20NYC%20Taxi%20Data.pbix); [`Dashboard.pbix`](../Dashboard.pbix) is an earlier report version. The PostgreSQL Gold view reconciles to 3,475,080 January Silver trips across 463,623 groups. SQL analysis is in [`../sql/analyze_gold_yellow_taxi_2025_01.sql`](../sql/analyze_gold_yellow_taxi_2025_01.sql), and the dashboard's model, DAX, and validation notes are in [`power_bi_dashboard_model.md`](power_bi_dashboard_model.md).
 
-### Resume Here
+### Current Power BI Model
 
-1. Start PostgreSQL with `docker compose up -d` if the containers were stopped, then open `Dashboard.pbix`.
-2. Finish the visual field assignments:
-   - Daily trend: use the `pickup_date` column (not **Date hierarchy > Day**) on X; `total_trips` on Y.
-   - Manhattan zone ranking: `total_trips` as the only bar value; `pct_of_manhattan_pickups` in Tooltips.
-   - Weekday/borough chart: `average_daily_trips` as the value; `days_in_january` in Tooltips; use the borough slicer to inspect smaller boroughs.
-   - Quality trend: `pct_trips_with_review_flags` as the only Y value; trip counts in Tooltips.
-   - Remove the unused blank visual. The two KPI cards should show about 3.48M monthly trips and 112.10K average daily trips.
-3. Save the report and review the final layout. Query 8's result table has not yet been shared for a separate daily quality-pattern interpretation.
+- The fact table is the Gold daily aggregate. Its grain is pickup date, pickup borough/zone, dropoff borough/zone, and payment type; `trip_count` is additive.
+- `DimDate`, `DimPickupLocation`, and `DimDropoffLocation` filter the fact with one-to-many, single-direction relationships. The location dimensions are built from distinct Gold borough/zone pairs and connect through composite pair keys.
+- Do not join this Gold aggregate to `zones` on borough and zone to recover `LocationID`. That label pair is not unique: Manhattan's Governor's Island/Ellis Island/Liberty Island label maps to IDs 103, 104, and 105; Queens' Corona maps to IDs 56 and 57. Those merges inflated a Power BI daily total. The corrected Jan 1 Power BI total is 90,186, matching PostgreSQL.
+- A separate PostgreSQL trip-level model is defined in [`../sql/star_schema_yellow_taxi_2025_01.sql`](../sql/star_schema_yellow_taxi_2025_01.sql). It retains source location IDs and is appropriate when ID-level location detail is needed.
 
-The next optional dashboard extension is a chart of the daily review-flag percentage. The measure counts each trip once if any provisional review condition applies; it is a review signal, not a count of confirmed invalid trips.
+### Resume / Final Polish
+
+1. Open `Final Dashboard NYC Taxi Data.pbix`.
+2. On both daily trend charts, set the X-axis to the raw `DimDate[Date]` field rather than a Date hierarchy level. The last screenshot showed the axis grouped at Year (`2025`).
+3. Clear slicers and selected chart points to review the full January dashboard. The day and weekday slicers were intentionally active in the last validation screenshot; selecting Wednesday and day 1 makes both KPI cards show 90,186 for Jan 1.
+4. Save the report. Then move on to the next project, adding orchestration and automated quality checks.
+
+The review-flag percentage counts each trip once if any provisional flag applies. It is a triage signal, not a count of confirmed invalid trips. The Vendor 2 Flex Fare pattern remains an unresolved source-data finding; preserve and flag those rows rather than deleting them.
 
 ---
 

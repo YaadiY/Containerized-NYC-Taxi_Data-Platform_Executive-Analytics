@@ -20,7 +20,9 @@ wheels/
 *.gz
 *.tar
 *.zip
+*.parquet.part
 data/
+nyc_taxi_data/
 
 # Docker volumes
 pg_data/

@@ -140,3 +140,15 @@ SELECT
 FROM gold_yellow_taxi_daily_demand_2025_01
 GROUP BY pickup_date
 ORDER BY pickup_date;
+
+-- 9. January pickup volume by borough and pickup zone.
+-- Borough and zone names are already included in the Gold view.
+SELECT
+    COALESCE(pickup_borough, 'Unknown / unmapped') AS pickup_borough,
+    COALESCE(pickup_zone, 'Unknown / unmapped') AS pickup_zone,
+    SUM(trip_count) AS total_trips
+FROM gold_yellow_taxi_daily_demand_2025_01
+GROUP BY
+    COALESCE(pickup_borough, 'Unknown / unmapped'),
+    COALESCE(pickup_zone, 'Unknown / unmapped')
+ORDER BY pickup_borough, total_trips DESC;

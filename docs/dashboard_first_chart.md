@@ -1,5 +1,7 @@
 # First Dashboard Chart: Daily Taxi Demand
 
+This page is the original walkthrough for importing individual SQL result sets. The current slicer-driven report uses a shared fact/dimension model and measures; see the [Power BI model and dashboard guide](power_bi_dashboard_model.md) for that setup and the final validation notes.
+
 This walkthrough connects Power BI Desktop to the local PostgreSQL database and builds a line chart from the Gold daily-demand view.
 
 ## Before You Start
@@ -73,6 +75,8 @@ This second visual highlights where Manhattan pickups are concentrated.
 
 These are the ten busiest pickup zones within Manhattan. Their percentages use all Manhattan pickups as the denominator; they are not percentages of all NYC trips.
 
+**Check the field source:** `pickup_zone`, `total_trips`, and `pct_of_manhattan_pickups` must all come from the table imported from this same top-zone query. If every zone bar repeats the full-month total (about 3.48 million), the category and value are likely coming from separate, unrelated imported query tables. Remove those fields and add both `pickup_zone` and `total_trips` from the top-zone result table; add its percentage from that same table to Tooltips. The expected zone totals range from about 95,000 to 170,000, with Midtown Center at 169,977.
+
 ## Add Two KPI Cards
 
 Use the daily totals table from the first chart. The table has one row per pickup date, so `SUM(total_trips)` is the January total and `AVERAGE(total_trips)` is the average daily volume.
@@ -117,4 +121,4 @@ If a chart title shows multiple measures, check that tooltip-only fields have no
 - Quality trend: X-axis is the `pickup_date` column itself; Y-axis contains only `pct_trips_with_review_flags`. Move trip counts to Tooltips.
 - Delete any unused blank visual from the canvas.
 
-For a date axis, use the column name from the field dropdown instead of **Date hierarchy**. Power BI creates a hierarchy with a Day level when a date is placed on an axis; that can display day numbers instead of full dates. See Microsoft's [X-axis guidance](https://learn.microsoft.com/power-bi/visuals/power-bi-visualization-customize-x-axis-and-y-axis).
+For a date axis, use the column name from the field dropdown instead of **Date hierarchy**. Power BI creates a hierarchy with a Day level when a date is placed on an axis; that can display day numbers instead of full dates. Don't try to uncheck the hierarchy in the Data pane: checking the date field there is what adds the default hierarchy. In the X-axis field well, open the field menu and choose the raw `pickup_date` column. If the raw-column option isn't available, remove the date field from the axis, drag `pickup_date` back from the Data pane, and choose the column rather than **Date hierarchy** when prompted. See Microsoft's [X-axis guidance](https://learn.microsoft.com/power-bi/visuals/power-bi-visualization-customize-x-axis-and-y-axis).

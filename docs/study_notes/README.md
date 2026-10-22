@@ -29,6 +29,6 @@ Existing material: [Module 1 interview Q&A](../module1_interview_qa.md), [interv
 | Bronze | Local TLC source files and ingested raw PostgreSQL tables are present. |
 | Silver | yellow_taxi_trips_2025_01_clean is built by SQL while the raw table is retained. |
 | Quality review | yellow_taxi_trips_2025_01_flagged is a non-destructive view. Vendor 2 Flex Fare findings are documented as unresolved. |
-| Gold | The daily demand view is built; trip, review-flag, negative-fare, and negative-total counts reconcile to Silver/review views. A full fact/dimension star schema remains a future extension. |
+| Gold | The daily-demand view is built; trip, review-flag, negative-fare, and negative-total counts reconcile to Silver/review views. A trip-level PostgreSQL star schema is scripted, and the Power BI Gold aggregate has date and role-playing location dimensions. |
 | Orchestration | The user runs the Python CLI and SQL scripts manually; no workflow scheduler is configured here. |
 | Kafka / Databricks | Study topics or future extensions, not implemented in this repository. |

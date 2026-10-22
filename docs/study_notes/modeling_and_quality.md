@@ -12,6 +12,19 @@ Example: one row in the proposed trip fact represents one source trip record. A 
 - Degenerate dimension: business identifier retained in a fact when a separate dimension is not useful.
 - Conformed dimension: shared definition used by more than one fact/product.
 
+## January 2025 Taxi Star Schema
+
+The executable model is in [`sql/star_schema_yellow_taxi_2025_01.sql`](../../sql/star_schema_yellow_taxi_2025_01.sql). It creates tables in the PostgreSQL `analytics` schema:
+
+- `fact_yellow_taxi_trip_2025_01`: one row per Silver trip row. `trip_count` is 1, so `SUM(trip_count)` counts trips.
+- `dim_date`: calendar attributes. The fact uses it twice, through `pickup_date_key` and `dropoff_date_key` (role-playing date dimension).
+- `dim_location`: taxi-zone attributes, used twice as pickup and dropoff locations. The dimension key is a warehouse surrogate; `location_id` retains the NYC Taxi zone identifier.
+- `dim_payment_type`: a readable label for each observed code, retaining the original code. Missing payment codes map to the special key 0.
+
+The source has no declared unique trip identifier. `trip_fact_key` is generated for warehouse row identification; it does not prove that the source rows are unique trips and should not be used to deduplicate them. The fact retains raw fare components and review flags. It does not define recognized revenue because negative Fare/Flex Fare semantics remain unresolved. Rerunning the SQL drops and rebuilds only these four derived model tables, not the source or Silver tables.
+
+Example query pattern: join the fact to `dim_date` and `dim_location`, then aggregate `SUM(trip_count)` by calendar date, borough, and zone. The fact's foreign keys are integer surrogate keys; always join through those keys rather than joining descriptive text.
+
 ## Slowly Changing Dimensions
 
 - Type 1: overwrite an attribute; history is not retained.

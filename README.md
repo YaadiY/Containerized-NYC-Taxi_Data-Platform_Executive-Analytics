@@ -45,6 +45,7 @@ flowchart LR
 | **Database UI** | pgAdmin 4 | Web interface for database inspection and query execution |
 | **Ingestion Engine** | Python 3.13 / `uv` | Chunked batch ingestion using Pandas and SQLAlchemy |
 | **Shell & Scripting** | GNU Bash (Git Bash) | Environment automation, service control, and CLI tooling |
+| **BI & Reporting** | Power BI Desktop | Import-mode dashboard over the Gold daily-demand model |
 
 ---
 
@@ -52,13 +53,18 @@ flowchart LR
 
 ```
 postgres_docker/
-├── .gitignore               # Protects against committing large datasets and secrets
-├── pyproject.toml           # Project dependencies managed via uv
-├── README.md                # Project architecture and execution documentation
-├── docker-compose.yaml      # Multi-container orchestration (Postgres 16 + pgAdmin 4)
-├── ingest.py                # Parameterized chunked CLI ingestion engine (Parquet + CSV)
-└── Dockerfile               # Container definition for the ingestion pipeline [Upcoming]
+├── README.md
+├── docker-compose.yaml      # PostgreSQL and pgAdmin services
+├── ingest.py                # Chunked CLI ingestion (Parquet and CSV)
+├── download_data.py         # Dataset downloader
+├── fix_parts.py             # Recovery helper for partial downloads
+├── Dashboard.pbix           # Earlier Power BI report
+├── Final Dashboard NYC Taxi Data.pbix
+├── sql/                     # Silver, profiling, flags, Gold, analysis, star schema
+└── docs/                    # Workflow, dashboard, model, and study notes
 ```
+
+Downloaded source files and database volumes are local working data and are excluded from Git.
 
 ---
 
@@ -141,7 +147,17 @@ The [Gold SQL model](sql/gold_yellow_taxi_daily_demand_2025_01.sql) creates the 
 
 Use [`sql/analyze_gold_yellow_taxi_2025_01.sql`](sql/analyze_gold_yellow_taxi_2025_01.sql) for read-only exploration of daily totals, weekday averages, and weekday demand by pickup borough.
 
+### Trip-Level Star Schema
+
+After building the January Silver table, run [`sql/star_schema_yellow_taxi_2025_01.sql`](sql/star_schema_yellow_taxi_2025_01.sql) in pgAdmin to create `analytics.dim_date`, `analytics.dim_location`, `analytics.dim_payment_type`, and `analytics.fact_yellow_taxi_trip_2025_01`. The fact grain is one row per Silver row; its generated key is a warehouse surrogate, because the source has no declared trip primary key. The model retains raw fare components and quality flags without claiming a finalized revenue metric. See [data modeling notes](docs/study_notes/modeling_and_quality.md) for the keys, grain, and assumptions.
+
 To visualize the daily totals, follow the [first Power BI chart walkthrough](docs/dashboard_first_chart.md).
+
+### Power BI Dashboard
+
+The current report is [`Final Dashboard NYC Taxi Data.pbix`](Final%20Dashboard%20NYC%20Taxi%20Data.pbix). It uses the Gold daily-demand aggregate with a Power BI star model, DAX measures, date and borough slicers, daily demand and quality trends, zone ranking, and weekday comparisons. See the [Power BI model and dashboard guide](docs/power_bi_dashboard_model.md) for the model grain, composite location keys, measures, reconciliation checks, and remaining visual polish. The earlier [`Dashboard.pbix`](Dashboard.pbix) is retained as a prior report version.
+
+The Power BI model is intentionally based on Gold borough/zone pairs. The Gold view groups by location names and does not retain `PULocationID` or `DOLocationID`; the TLC zone lookup has duplicate borough/zone labels, so merging this aggregate to `zones` by names and then adding a `LocationID` can multiply fact rows. The separate PostgreSQL trip-level schema above retains and joins the source location IDs directly.
 
 ## Roadmap & Progress Tracker
 
