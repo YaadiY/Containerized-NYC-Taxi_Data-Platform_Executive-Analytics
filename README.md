@@ -153,13 +153,39 @@ After building the January Silver table, run [`sql/star_schema_yellow_taxi_2025_
 
 To visualize the daily totals, follow the [first Power BI chart walkthrough](docs/dashboard_first_chart.md).
 
-### Power BI Dashboard
+### Power BI Executive Analytics Dashboard
 
-The current report is [`Final Dashboard NYC Taxi Data.pbix`](Final%20Dashboard%20NYC%20Taxi%20Data.pbix). It uses the Gold daily-demand aggregate with a Power BI star model, DAX measures, date and borough slicers, daily demand and quality trends, zone ranking, and weekday comparisons. See the [Power BI model and dashboard guide](docs/power_bi_dashboard_model.md) for the model grain, composite location keys, measures, reconciliation checks, and remaining visual polish. The earlier [`Dashboard.pbix`](Dashboard.pbix) is retained as a prior report version.
+The project delivers an interactive BI reporting layer via [`Final Dashboard NYC Taxi Data.pbix`](Final%20Dashboard%20NYC%20Taxi%20Data.pbix) built on top of the reconciled January 2025 Gold daily-demand model (`gold_yellow_taxi_daily_demand_2025_01`):
 
-The Power BI model is intentionally based on Gold borough/zone pairs. The Gold view groups by location names and does not retain `PULocationID` or `DOLocationID`; the TLC zone lookup has duplicate borough/zone labels, so merging this aggregate to `zones` by names and then adding a `LocationID` can multiply fact rows. The separate PostgreSQL trip-level schema above retains and joins the source location IDs directly.
+#### 1. Key Metrics & Executive KPIs
+* **Total Trips (Volume):** **3.475M** verified rides across January 2025.
+* **Daily Average Demand:** **112.099K** trips per day.
+* **Data Quality Tracking:** Integrated monitoring of review-flagged rides (~20–30% peak anomaly rate, capturing Vendor 2 Flex Fare and negative totals).
 
-## Roadmap & Progress Tracker
+#### 2. Visual Architecture & Insights
+* **Daily Demand Trend (`Sum of Trips by Day`):**
+  - Line visual tracking daily trips from Jan 1 through Jan 31.
+  - Highlights mid-month cyclical peaks reaching ~140K trips/day and post-weekend drops (~80K–90K trips).
+* **Data Quality & Anomaly Trend (`Total Trips and Pct Trips With Review Flags`):**
+  - Dual-axis combo chart tracking total volume alongside anomaly flag percentages to evaluate operational risks and vendor discrepancies across the month.
+* **Pickup Zone Demand Hierarchy (`Total Trips & % of Borough Pickups`):**
+  - Top N horizontal bar chart ranking high-density mobility zones:
+    1. **Midtown Center** (~170K trips)
+    2. **Upper East Side South** (~160K trips)
+    3. **Upper East Side North** (~155K trips)
+    4. **JFK Airport** (~135K trips)
+    5. **Times Sq / Theatre District** (~125K trips)
+* **Borough & Weekday Demand Distribution:**
+  - Clustered bar chart showing average daily volume stratified by borough (Manhattan overwhelmingly leads with ~100K+ daily rides, followed by Queens with airport corridors, Brooklyn, and Bronx).
+* **Multi-Dimensional Slice & Dice:**
+  - Interactive grid slicers for **Weekday** (Mon–Sun), **Day of Month** (1–31 slider), and **Pickup Borough** (Manhattan, Queens, Brooklyn, Bronx, Staten Island, EWR).
+
+#### 3. Power BI Star Schema & Modeling Notes
+* **Dimensions:** `DimDate` (calendar hierarchy), `DimPickupLocation` (distinct composite borough/zone keys), and `DimDropoffLocation`.
+* **Grain Integrity:** Uses distinct composite borough/zone pairs rather than joining on duplicate text lookup names, preventing fact multiplication and reconciling to the exact **3,475,080** Silver row count.
+* Detailed setup, DAX definitions, and reconciliation checks are documented in the [Power BI Dashboard Guide](docs/power_bi_dashboard_model.md).
+
+---
 
 - [x] Repository initialization & Git configuration
 - [x] Git ignore rules for large dataset files (`.parquet`, `.csv`)
