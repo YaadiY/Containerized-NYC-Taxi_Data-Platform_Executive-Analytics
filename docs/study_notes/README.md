@@ -8,10 +8,11 @@ These notes are a durable revision guide for the NYC taxi project and the analyt
 2. [SQL](sql.md) and [PostgreSQL](postgresql.md)
 3. [Python ingestion](python_ingestion.md)
 4. [Docker and Compose](docker.md), then [Bash](bash.md)
-5. [Dimensional modeling and data quality](modeling_and_quality.md)
-6. [Orchestration, lakehouse, BI, and governance](orchestration_lakehouse_governance.md)
-7. [Kafka](kafka.md) as a separate streaming topic
-8. [Role-focused interview questions](interview_questions.md)
+5. [Git & GitHub in Data Engineering](git_github.md)
+6. [Dimensional modeling and data quality](modeling_and_quality.md)
+7. [Orchestration, lakehouse, BI, and governance](orchestration_lakehouse_governance.md)
+8. [Kafka](kafka.md) as a separate streaming topic
+9. [Role-focused interview questions](interview_questions.md)
 
 Existing material: [Module 1 interview Q&A](../module1_interview_qa.md), [interview playbook](../interview_playbook.md), [data-quality workflow](../data_quality_workflow.md), and [session checkpoint](../session_checkpoint.md).
 
