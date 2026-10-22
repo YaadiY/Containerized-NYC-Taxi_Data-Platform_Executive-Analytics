@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.venv-windows/
+.git/
+.gitignore
+pg_data/
+nyc_taxi_data/
+*.parquet
+*.csv
+*.pbix
+.ipynb_checkpoints/
+docs/

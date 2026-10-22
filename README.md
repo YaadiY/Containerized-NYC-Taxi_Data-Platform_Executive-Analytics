@@ -187,12 +187,16 @@ The project delivers an interactive BI reporting layer via [`Final Dashboard NYC
 
 ---
 
+## Roadmap & Progress Tracker
+
 - [x] Repository initialization & Git configuration
 - [x] Git ignore rules for large dataset files (`.parquet`, `.csv`)
 - [x] Docker Compose setup for PostgreSQL 16 & pgAdmin 4
 - [x] Chunked data ingestion script (`ingest.py`)
 - [x] Multi-threaded dataset downloader with resuming & validation (`download_data.py`)
 - [x] January Silver quality review and reconciled Gold daily-demand view
+- [x] Executive Power BI dashboard (`Final Dashboard NYC Taxi Data.pbix`)
+- [x] Dockerizing the ingestion pipeline (`Dockerfile` & container-to-container execution)
 - [ ] Multi-month full dataset batch ingestion automation
-- [ ] Dockerizing the ingestion pipeline (`Dockerfile`)
 - [ ] Analytical SQL queries & homework validation
+
